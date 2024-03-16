@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: "blog"
+      MYSQL_USER: "muhammad"
+      MYSQL_PASSWORD: "mysqlpwd4habr"
+      MYSQL_ROOT_PASSWORD: "rootpwd4habr"
+    ports:
+      - "3308:3306"  # Перенаправляем порт MySQL
+  server:
+    build:
+      context: .
+    ports:
+      - "9000:80"
+    depends_on:
+      - mysql  # Зависимость от сервиса MySQL
+    environment:
+      - PASSWORD_FILE_PATH=/run/secrets/db-password
+      - DB_HOST=mysql  # Изменяем хост на mysql
+      - DB_CONNECTION=mysql  # Указываем тип подключения
+      - DB_DATABASE=blog
+      - DB_USERNAME=muhammad
+      - DB_PASSWORD=mysqlpwd4habr
